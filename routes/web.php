@@ -2,34 +2,52 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\DashboardController;
+use Illuminate\Http\Request;
 
-// Rute untuk halaman utama
+// Halaman utama (welcome)
 Route::get('/', function () {
     return view('welcome');
 });
 
-// Hapus Auth::routes(); karena kita menggunakan rute kustom di bawah.
-
-// Rute untuk menampilkan form login (menggunakan GET)
+// Login
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-
-// Rute untuk memproses data dari form login (menggunakan POST)
 Route::post('/login', [AuthController::class, 'login']);
 
-// Rute untuk halaman dashboard yang dilindungi middleware 'auth'
-Route::get('/dashboard', function () {
-    if (Auth::user()->role == 'admin') {
-        return view('admin.dashboard');
-    } elseif (Auth::user()->role == 'receptionist') {
-        return view('resepsionis.dashboard');
-    } else {
-        // Arahkan ke rute lain, misalnya halaman utama
-        return redirect('/');
-    }
-})->middleware('auth')->name('dashboard');
-
-
-// Catatan: Anda juga bisa menambahkan rute untuk register jika dibutuhkan
+// Register
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
+
+// Dashboard dengan login (admin/resepsionis)
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware('auth')
+    ->name('dashboard');
+
+// Dashboard tanpa login (public)
+Route::get('/public-dashboard', function () {
+    return view('layouts.pages.dashboard.index');
+})->name('public.dashboard');
+
+
+// Halaman verifikasi sebelum dashboard
+Route::get('/verify-dashboard', function () {
+    return view('verify');
+})->name('verify.dashboard');
+
+// Proses verifikasi
+Route::post('/verify-dashboard', function (Request $request) {
+    // misalnya kode akses "12345"
+    if ($request->input('access_code') === '12345') {
+        return redirect()->route('dashboard');
+    }
+    return back()->with('error', 'Kode verifikasi salah!');
+});
+
+Route::get('/dashboard', function (Request $request) {
+    // Cek apakah user datang dari form verifikasi
+    if (!$request->headers->get('referer') || !str_contains($request->headers->get('referer'), 'verify-dashboard')) {
+        return redirect()->route('verify.dashboard');
+    }
+    return view('layouts.pages.dashboard.index'); 
+})->name('dashboard');
+
