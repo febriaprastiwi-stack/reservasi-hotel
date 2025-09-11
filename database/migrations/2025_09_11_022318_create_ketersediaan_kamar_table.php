@@ -11,15 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('rooms', function (Blueprint $table) {
+        Schema::create('ketersediaan_kamar', function (Blueprint $table) {
             $table->id();
-            $table->string('nomor_kamar', 10)->unique();
-            $table->string('tipe_kamar', 64);
+             $table->string('nomor_kamar')->unique();
+            $table->string('type');
             $table->decimal('harga', 12, 2);
             $table->enum('status', ['available', 'booked'])->default('available');
+            $table->string('image')->nullable(); // simpan path gambar
+            $table->text('fasilitas')->nullable(); // deskripsi fasilitas kamar
+            $table->string('view')->nullable(); // pemandangan (misal: garden, sea, city)
             $table->timestamps();
         });
-
     }
 
     /**
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('rooms');
+        Schema::dropIfExists('ketersediaan_kamar');
     }
 };

@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('no_telp', 16)->nullable();
             $table->string('email', 128)->unique();
             $table->string('tipe_kamar', 64);
-            $table->DATE('tanggal_check_in');
-            $table->INT('total_hari');
+            $table->date('tanggal_check_in');
+            $table->integer('total_hari');
             $table->string('pembayaran', 64);
             $table->timestamps();
         });

@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\KetersediaanKamarController;
 use Illuminate\Http\Request;
 
 // Halaman utama (welcome)
@@ -11,7 +14,8 @@ Route::get('/', function () {
 });
 
 // Login
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::get('/login', [AuthController::
+class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
 // Register
@@ -25,7 +29,7 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
 
 // Dashboard tanpa login (public)
 Route::get('/public-dashboard', function () {
-    return view('layouts.pages.dashboard.index');
+    return view('pages.dashboard.index');
 })->name('public.dashboard');
 
 
@@ -48,6 +52,13 @@ Route::get('/dashboard', function (Request $request) {
     if (!$request->headers->get('referer') || !str_contains($request->headers->get('referer'), 'verify-dashboard')) {
         return redirect()->route('verify.dashboard');
     }
-    return view('layouts.pages.dashboard.index'); 
+    return view('pages.dashboard.index'); 
 })->name('dashboard');
+
+Route::resource('reservations', ReservationController::class);
+Route::resource('payments', PaymentController::class);
+Route::get('/payments/report', [PaymentController::class, 'report'])->name('payments.report');
+Route::get('/ketersediaan_kamar', [KetersediaanKamarController::class, 'index'])
+     ->name('pages.dashboard.ketersediaan_kamar.index');
+
 

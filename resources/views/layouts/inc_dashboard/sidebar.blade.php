@@ -2,13 +2,16 @@
     <h5 class="mb-4">Menu</h5>
     <ul class="nav nav-pills flex-column">
         <li class="nav-item">
-            <a href="#" class="nav-link">Dashboard</a>
+            <a href="{{ url('/dashboard') }}" class="nav-link">Dashboard</a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">Ketersediaan Kamar</a>
+            <a href="{{ route('pages.dashboard.ketersediaan_kamar.index') }}" class="nav-link">Ketersediaan Kamar</a>
         </li>
         <li class="nav-item">
-            <a href="#" class="nav-link">Daftar Reservasi</a>
+            <a href="{{ route('reservations.index') }}" class="nav-link">Daftar Reservasi</a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('payments.report') }}" class="d-block text-white mb-2">Laporan Pembayaran</a>
         </li>
     </ul>
 </div>

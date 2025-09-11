@@ -12,8 +12,8 @@ class Reservation extends Model
         return $this->belongsTo(Customer::class);
     }
 
-    public function room() {
-        return $this->belongsTo(Rooms::class);
+    public function ketersediaan_kamar() {
+        return $this->belongsTo(KetersediaanKamar::class);
     }
 
     public function payment() {
