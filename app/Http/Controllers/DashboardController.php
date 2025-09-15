@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Reservation;
 use App\Models\Room;
-use App\Models\Customer;
 use App\Models\Payment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -18,8 +17,7 @@ class DashboardController extends Controller
         // Statistik
         $reservasi_bulan_ini = Reservation::whereMonth('created_at', now()->month)->count();
         $kamar_tersedia = Room::where('status', 'tersedia')->count();
-        $total_customer = Customer::count();
-        $total_pendapatan = Reservation::sum('total_price');
+        $total_pendapatan = Reservation::sum('total_harga');
 
         // Data reservasi per bulan
         $reservasi_bulanan = [];
@@ -33,10 +31,9 @@ class DashboardController extends Controller
             'Terisi'   => Room::where('status','terisi')->count(),
         ];
 
-        return view('admin.dashboard', compact(
+        return view('pages.admin.dashboard', compact(
             'reservasi_bulan_ini',
             'kamar_tersedia',
-            'total_customer',
             'total_pendapatan',
             'reservasi_bulanan',
             'status_kamar'

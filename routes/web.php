@@ -1,39 +1,54 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReservationController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\KetersediaanKamarController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\FasilitasController;
 
+// =============================
 // Halaman utama (welcome)
+// =============================
 Route::get('/', function () {
     return view('welcome');
 });
 
+// =============================
+// Auth Routes
+// =============================
+Auth::routes();
+
 // Login
-Route::get('/login', [AuthController::
-class, 'showLoginForm'])->name('login');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 
 // Register
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
 
-// Dashboard dengan login (admin/resepsionis)
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware('auth')
-    ->name('dashboard');
+// Logout
+Route::post('/logout', function () {
+    Auth::logout();
+    request()->session()->invalidate();
+    request()->session()->regenerateToken();
+    return redirect('/login'); // arahkan kembali ke halaman login
+})->name('logout');
 
-// Dashboard tanpa login (public)
-Route::get('/public-dashboard', function () {
-    return view('pages.dashboard.index');
-})->name('public.dashboard');
+// =============================
+// Group Admin
+// =============================
+Route::middleware(['auth'])->prefix('admin')->group(function () {
+    Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    Route::resource('rooms', RoomController::class);
+    Route::resource('fasilitas', FasilitasController::class);
+});
 
-
+// =============================
 // Halaman verifikasi sebelum dashboard
+// =============================
 Route::get('/verify-dashboard', function () {
     return view('verify');
 })->name('verify.dashboard');
@@ -47,18 +62,18 @@ Route::post('/verify-dashboard', function (Request $request) {
     return back()->with('error', 'Kode verifikasi salah!');
 });
 
+// Dashboard (hanya bisa diakses jika lewat verify)
 Route::get('/dashboard', function (Request $request) {
-    // Cek apakah user datang dari form verifikasi
-    if (!$request->headers->get('referer') || !str_contains($request->headers->get('referer'), 'verify-dashboard')) {
+    if (
+        !$request->headers->get('referer') ||
+        !str_contains($request->headers->get('referer'), 'verify-dashboard')
+    ) {
         return redirect()->route('verify.dashboard');
     }
-    return view('pages.dashboard.index'); 
+    return view('pages.dashboard.index');
 })->name('dashboard');
 
+// =============================
+// Reservations (CRUD)
+// =============================
 Route::resource('reservations', ReservationController::class);
-Route::resource('payments', PaymentController::class);
-Route::get('/payments/report', [PaymentController::class, 'report'])->name('payments.report');
-Route::get('/ketersediaan_kamar', [KetersediaanKamarController::class, 'index'])
-     ->name('pages.dashboard.ketersediaan_kamar.index');
-
-

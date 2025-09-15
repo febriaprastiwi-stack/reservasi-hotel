@@ -26,19 +26,19 @@
 
         .sidebar {
             min-height: 100vh;
-            background: #343a40;
-            color: #fff;
+            background: #f8f9fa;
+            border-right: 1px solid #dee2e6;
         }
 
-        .sidebar a {
-            color: #adb5bd;
-            text-decoration: none;
-            display: block;
-            padding: 10px 20px;
+        .sidebar .nav-link {
+            color: #333;
+            padding: 10px 15px;
+            border-radius: 5px;
         }
 
-        .sidebar a:hover {
-            background: #495057;
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            background: #0d6efd;
             color: #fff;
         }
 
@@ -71,7 +71,6 @@
                     @guest
                         <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
                         <li class="nav-item"><a href="{{ route('register') }}" class="nav-link">Register</a></li>
-
                     @endguest
                 </ul>
             </div>
@@ -81,12 +80,8 @@
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-2 sidebar d-none d-md-block">
-                <h5 class="p-3">Menu</h5>
-                <a href="{{ url('/dashboard') }}">Dashboard</a>
-                <a href="{{ route('pages.dashboard.ketersediaan_kamar.index') }}">Ketersediaan Kamar</a>
-                <a href="{{ route('reservations.index') }}">Daftar Reservasi</a>
-                <a href="{{ route('payments.index') }}">Pembayaran</a>
+            <div class="col-md-2 p-0 sidebar d-none d-md-block">
+                @include('layouts.inc_dashboard.sidebar')
             </div>
 
             <!-- Main Content -->

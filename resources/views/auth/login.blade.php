@@ -46,7 +46,7 @@
     <div class="login-container">
         <div class="login-form text-center">
             <h3 class="mb-4">GRAND ROYAL HOTEL</h3>
-            <p class="text-muted mb-4">Login Hanya Untuk Admin & Resepsionis</p>
+            <p class="text-muted mb-4">Login Hanya Untuk Admin</p>
             <form action="{{ route('login') }}" method="POST">
                 @csrf
                 @if ($errors->any())

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained()->onDelete('cascade');
-            $table->foreignId('room_id')->constrained()->onDelete('cascade');
+            $table->bigInteger('customer_id')->constrained()->onDelete('cascade');
+            $table->biginteger('room_id')->constrained()->onDelete('cascade');
             $table->date('check_in');
             $table->date('check_out');
             $table->decimal('total_harga', 12, 2);

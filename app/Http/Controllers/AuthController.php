@@ -25,8 +25,10 @@ class AuthController extends Controller
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
 
-                // Login berhasil, arahkan ke dashboard
-                return redirect()->intended('/dashboard');
+                if (Auth::user()->role === 'admin') {
+                    return redirect()->route('admin.dashboard'); // admin → admin dashboard
+                }
+                return redirect()->route('dashboard'); // resepsionis → dashboard biasa
             }
 
             // Login gagal, kembalikan ke halaman login dengan pesan error
@@ -58,7 +60,7 @@ class AuthController extends Controller
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
-            'role' => 'receptionist', // Tentukan peran default (contoh: 'receptionist')
+            'role' => 'resepsionis', 
         ]);
 
         // Login pengguna setelah registrasi
