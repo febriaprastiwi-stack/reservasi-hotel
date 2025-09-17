@@ -97,3 +97,41 @@
 </body>
 
 </html>
+
+<style>
+    .navbar-custom {
+        background: linear-gradient(90deg, #0f2027, #203a43, #2c5364);
+        /* gradasi elegan */
+        padding: 15px 0;
+    }
+
+    .navbar-custom .nav-link {
+        color: #f1f1f1 !important;
+        font-weight: 500;
+        margin: 0 10px;
+        transition: color 0.3s ease;
+    }
+
+    .navbar-custom .nav-link:hover {
+        color: #ffcc00 !important;
+        /* efek hover emas */
+    }
+
+    .navbar-custom .navbar-brand img.logo-center {
+        height: 50px;
+        background: none;
+    }
+
+    .navbar-custom .btn-primary {
+        background-color: #ffcc00;
+        border: none;
+        color: #000;
+        font-weight: bold;
+        transition: 0.3s ease;
+    }
+
+    .navbar-custom .btn-primary:hover {
+        background-color: #e6b800;
+        color: #fff;
+    }
+</style>

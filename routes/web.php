@@ -1,25 +1,20 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\FasilitasController;
+use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Home\RoomsController;
+use App\Http\Controllers\ReservationController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 // =============================
 // Halaman utama (welcome)
 // =============================
 Route::get('/', function () {
     return view('welcome');
-});
-
-// =============================
-// Auth Routes
-// =============================
-Auth::routes();
+})->name('home');
 
 // Login
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -34,6 +29,7 @@ Route::post('/logout', function () {
     Auth::logout();
     request()->session()->invalidate();
     request()->session()->regenerateToken();
+
     return redirect('/login'); // arahkan kembali ke halaman login
 })->name('logout');
 
@@ -55,21 +51,22 @@ Route::get('/verify-dashboard', function () {
 
 // Proses verifikasi
 Route::post('/verify-dashboard', function (Request $request) {
-    // misalnya kode akses "12345"
     if ($request->input('access_code') === '12345') {
         return redirect()->route('dashboard');
     }
+
     return back()->with('error', 'Kode verifikasi salah!');
 });
 
 // Dashboard (hanya bisa diakses jika lewat verify)
 Route::get('/dashboard', function (Request $request) {
     if (
-        !$request->headers->get('referer') ||
-        !str_contains($request->headers->get('referer'), 'verify-dashboard')
+        ! $request->headers->get('referer') ||
+        ! str_contains($request->headers->get('referer'), 'verify-dashboard')
     ) {
         return redirect()->route('verify.dashboard');
     }
+
     return view('pages.dashboard.index');
 })->name('dashboard');
 
@@ -77,3 +74,10 @@ Route::get('/dashboard', function (Request $request) {
 // Reservations (CRUD)
 // =============================
 Route::resource('reservations', ReservationController::class);
+
+// =============================
+// Halaman Home
+// =============================
+Route::prefix('home')->name('home.')->group(function () {
+    Route::get('/rooms', [RoomsController::class, 'index'])->name('rooms.index');
+});

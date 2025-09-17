@@ -87,7 +87,10 @@
         <div class="hero-content">
             <h1 class="display-4 main-heading-font">Welcome to Grand Royal Hotel</h1>
             <p class="lead">Enjoy The Experience of Comfort & Luxury</p>
-            <a href="{{ url('/') }}" class="btn btn-lg btn-primary mt-4" style="letter-spacing: 5px;">HOME</a>
+            <a href="{{ route('home.rooms.index') }}" class="btn btn-lg btn-primary mt-4" style="letter-spacing: 5px;">
+                HOME
+            </a>
+
         </div>
     </header>
 
