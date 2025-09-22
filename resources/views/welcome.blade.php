@@ -90,7 +90,6 @@
             <a href="{{ route('home.rooms.index') }}" class="btn btn-lg btn-primary mt-4" style="letter-spacing: 5px;">
                 HOME
             </a>
-
         </div>
     </header>
 

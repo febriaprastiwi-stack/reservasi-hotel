@@ -26,6 +26,16 @@
         .logo-center {
             height: 50px;
         }
+
+        .table td,
+        .table th {
+            vertical-align: middle;
+            /* biar angka sejajar tengah secara vertikal */
+        }
+
+        .table .text-center {
+            text-align: center;
+        }
     </style>
 </head>
 

@@ -12,28 +12,70 @@
 
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
         }
 
+        /* Sidebar */
         .sidebar {
-            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 220px;
+            /* lebar sidebar */
+            background: #222;
+            color: #fff;
+            z-index: 1020;
         }
 
-        .sidebar .nav-link {
-            color: #adb5bd;
-            border-radius: 5px;
+        /* Navbar */
+        .navbar-custom {
+            position: fixed;
+            top: 0;
+            left: 220px;
+            /* sejajar setelah sidebar */
+            right: 0;
+            z-index: 1030;
         }
 
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            background: #0d6efd;
-            color: #fff !important;
+        /* Konten utama */
+        .content-wrapper {
+            margin-left: 220px;
+            /* agar tidak ketimpa sidebar */
+            margin-top: 70px;
+            /* agar tidak ketimpa navbar */
+            padding: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+
+            .navbar-custom {
+                left: 0;
+            }
+
+            /* Tabel responsif */
+            .table td,
+            .table th {
+                vertical-align: middle;
+                /* sejajarkan isi tabel di tengah vertikal */
+            }
+
+            .table .text-center {
+                text-align: center;
+            }
         }
     </style>
+
 </head>
 
-<body>
-    <div class="d-flex">
+<body class="d-flex flex-column min-vh-100">
+    <div class="layout-wrapper layout-content-navbar d-flex flex-grow-1">
         {{-- Sidebar --}}
         @include('admin.layouts.sidebar')
 

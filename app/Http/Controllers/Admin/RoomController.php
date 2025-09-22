@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Admin;
+
 use App\Http\Controllers\Controller;
 use App\Models\Room;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class RoomController extends Controller
      */
     public function index()
     {
-        $rooms = Room::all();
+        $rooms = Room::latest()->get();
         return view('pages.admin.rooms.index', compact('rooms'));
     }
 
@@ -31,14 +32,21 @@ class RoomController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nomor_kamar' => 'required|unique:rooms',
-            'jenis_kamar' => 'required',
+            'nomor_kamar'     => 'required|unique:rooms,nomor_kamar',
+            'jenis_kamar'     => 'required|string|max:255',
             'fasilitas_kamar' => 'nullable|string',
-            'jumlah_kasur' => 'required|integer|min:1',
-            'gambar_kasur' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'jumlah_kasur'    => 'required|integer|min:1',
+            'harga_per_malam' => 'required|numeric|min:0',
+            'gambar_kasur'    => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $data = $request->all();
+        $data = $request->only([
+            'nomor_kamar',
+            'jenis_kamar',
+            'fasilitas_kamar',
+            'jumlah_kasur',
+            'harga_per_malam',
+        ]);
 
         if ($request->hasFile('gambar_kasur')) {
             $data['gambar_kasur'] = $request->file('gambar_kasur')->store('rooms', 'public');
@@ -71,14 +79,21 @@ class RoomController extends Controller
     public function update(Request $request, Room $room)
     {
         $request->validate([
-            'nomor_kamar' => 'required|unique:rooms,nomor_kamar,' . $room->id,
-            'jenis_kamar' => 'required',
+            'nomor_kamar'     => 'required|unique:rooms,nomor_kamar,' . $room->id,
+            'jenis_kamar'     => 'required|string|max:255',
             'fasilitas_kamar' => 'nullable|string',
-            'jumlah_kasur' => 'required|integer|min:1',
-            'gambar_kasur' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'jumlah_kasur'    => 'required|integer|min:1',
+            'harga_per_malam' => 'required|numeric|min:0',
+            'gambar_kasur'    => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $data = $request->all();
+        $data = $request->only([
+            'nomor_kamar',
+            'jenis_kamar',
+            'fasilitas_kamar',
+            'jumlah_kasur',
+            'harga_per_malam',
+        ]);
 
         if ($request->hasFile('gambar_kasur')) {
             if ($room->gambar_kasur) {

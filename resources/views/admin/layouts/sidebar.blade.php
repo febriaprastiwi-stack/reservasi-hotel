@@ -1,4 +1,4 @@
-<div class="d-flex flex-column p-3 bg-dark text-white vh-100 sidebar">
+<div class="sidebar d-flex flex-column p-3 bg-dark text-white">
     <h4 class="text-center mb-4">GRAND ROYAL HOTEL</h4>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
@@ -25,3 +25,23 @@
         </form>
     </div>
 </div>
+
+<style>
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 250px;
+        /* lebar sidebar */
+        overflow-y: auto;
+        z-index: 1020;
+    }
+
+    .content {
+        margin-left: 250px;
+        /* supaya konten geser ke kanan */
+        padding: 80px 20px 20px;
+        /* 80px biar tidak ketutup navbar */
+    }
+</style>

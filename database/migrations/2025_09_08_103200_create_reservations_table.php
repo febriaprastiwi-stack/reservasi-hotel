@@ -13,12 +13,15 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('customer_id')->constrained()->onDelete('cascade');
-            $table->biginteger('room_id')->constrained()->onDelete('cascade');
+            $table->bigInteger('room_id')->constrained('rooms')->onDelete('cascade');
+            $table->string('name');
+            $table->string('email');
             $table->date('check_in');
             $table->date('check_out');
-            $table->decimal('total_harga', 12, 2);
-            $table->enum('status', ['pending', 'confirmed'])->default('pending');
+            $table->integer('guests');
+            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
+            $table->string('payment')->nullable(); 
+            $table->decimal('total_price', 12, 2)->default(0);
             $table->timestamps();
         });
 

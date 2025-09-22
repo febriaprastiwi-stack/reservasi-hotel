@@ -43,6 +43,7 @@
 </head>
 
 <body>
+
     <div class="login-container">
         <div class="login-form text-center">
             <h3 class="mb-4">GRAND ROYAL HOTEL</h3>
@@ -66,7 +67,6 @@
                     @error('password')
                         <div class="text-danger mt-1">{{ $message }}</div>
                     @enderror
-
                 </div>
                 <button type="submit" class="btn btn-primary w-100 mt-3">LOGIN</button>
             </form>

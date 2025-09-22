@@ -19,9 +19,9 @@
                                 <div class="card-body">
                                     <h5>{{ $room->name }} ({{ $room->number }})</h5>
                                     <p>Guests: {{ $room->capacity }}</p>
-                                    <p>Features: {{ $room->features }}</p>
-                                    <p>Facilities: {{ $room->facilities }}</p>
-                                    <h6 class="text-success">IDR {{ number_format($room->price, 0, ',', '.') }}</h6>
+                                    <p>Fitur: {{ $room->features }}</p>
+                                    <p>Fasilitas: {{ $room->facilities }}</p>
+                                    <h6 class="text-success">IDR {{ number_format($room->harga, 0, ',', '.') }} / night</h6>
                                     <div class="d-flex">
                                         <a href="{{ route('reservations.create', $room->id) }}"
                                             class="btn btn-outline-dark me-2">Book Now</a>

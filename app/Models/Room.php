@@ -17,5 +17,12 @@ class Room extends Model
         'fasilitas_kamar',
         'jumlah_kasur',
         'gambar_kasur',
+        'harga_per_malam',
     ];
+
+    // Contoh: jika ada relasi dengan Reservation
+    public function reservations()
+    {
+        return $this->hasMany(Reservation::class);
+    }
 }

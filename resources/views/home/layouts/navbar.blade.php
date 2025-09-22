@@ -10,10 +10,6 @@
             <img src="{{ asset('img/logo.jpg') }}" alt="Hotel Logo" class="logo-center">
         </a>
 
-        <!-- Right Menu -->
-        <div class="d-flex">
-            <a href="{{ route('reservations.index') }}" class="btn btn-primary ms-2">Pesan Kamar</a>
-        </div>
     </div>
 </nav>
 

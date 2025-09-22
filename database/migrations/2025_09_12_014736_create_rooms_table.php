@@ -12,13 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('rooms', function (Blueprint $table) {
-            $table->id(); 
-            $table->string('nomor_kamar')->unique(); 
-            $table->string('jenis_kamar');          
+            $table->id();
+            $table->string('nomor_kamar')->unique();
+            $table->string('jenis_kamar');
             $table->text('fasilitas_kamar')->nullable();
-            $table->integer('jumlah_kasur')->default(1); 
-            $table->string('gambar_kasur')->nullable();  
-            $table->timestamps(); 
+            $table->unsignedInteger('jumlah_kasur')->default(1);
+            $table->string('gambar_kasur')->nullable();
+             $table->decimal('harga_per_malam', 12, 2)->default(0);
+            $table->timestamps();
         });
     }
 
