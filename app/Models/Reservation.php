@@ -13,7 +13,7 @@ class Reservation extends Model
         'check_in',
         'check_out',
         'guests',
-        'payment_method',
+        'payment',
         'total_price',
     ];
 

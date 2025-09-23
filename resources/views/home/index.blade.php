@@ -23,8 +23,9 @@
                                     <p>Fasilitas: {{ $room->facilities }}</p>
                                     <h6 class="text-success">IDR {{ number_format($room->harga, 0, ',', '.') }} / night</h6>
                                     <div class="d-flex">
-                                        <a href="{{ route('reservations.create', $room->id) }}"
-                                            class="btn btn-outline-dark me-2">Book Now</a>
+                                    <a href="{{ route('home.reservations.create', ['room_id' => $room->id]) }}" 
+                                        class="btn btn-outline-dark btn-sm w-50">Book Now</a>
+
                                         <a href="{{ route('rooms.show', $room->id) }}" class="btn btn-dark">More details</a>
                                     </div>
                                 </div>

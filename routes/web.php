@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Home\KamarController;
 use App\Http\Controllers\ReservationController;
-use App\Http\Controllers\Home\ReservationsController;
+use App\Http\Controllers\Home\HomeReservationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -72,7 +72,7 @@ Route::get('/dashboard', function (Request $request) {
 })->name('dashboard');
 
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('dashboard')->name('dashboard.')->group(function () {
     Route::resource('reservations', ReservationController::class);
 });
 
@@ -80,15 +80,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 // Halaman Home
 // =============================
 Route::prefix('home')->name('home.')->group(function () {
-        Route::get('/rooms', [KamarController::class, 'index'])->name('rooms.index');
-        Route::get('/home/rooms/{room}', [KamarController::class, 'show'])->name('rooms.show');
+    // Route untuk Rooms
+    Route::get('/rooms', [KamarController::class, 'index'])->name('rooms.index');
+    Route::get('/rooms/{room}', [KamarController::class, 'show'])->name('rooms.show');
 
-Route::prefix('reservations')->name('reservations.')->group(function () {
-        Route::get('/', [HomeReservationsController::class, 'index'])->name('index');   // daftar reservasi user
-        Route::get('/create', [HomeReservationsController::class, 'create'])->name('create'); // form pemesanan
-        Route::post('/', [HomeReservationsController::class, 'store'])->name('store');  // simpan pemesanan
-        Route::get('/history', [HomeReservationsController::class, 'history'])->name('history'); // riwayat pemesanan
-        Route::get('/{reservation}', [HomeReservationsController::class, 'show'])->name('show'); // detail reservasi
-        Route::delete('/{reservation}', [HomeReservationsController::class, 'destroy'])->name('destroy'); // batal
+    // Route untuk Reservations
+    Route::prefix('reservations')->name('reservations.')->group(function () {
+        Route::get('/', [HomeReservationController::class, 'index'])->name('index');
+        Route::get('/create', [HomeReservationController::class, 'create'])->name('create');
+        Route::post('/', [HomeReservationController::class, 'store'])->name('store');
+        Route::get('/history', [HomeReservationController::class, 'history'])->name('history');
     });
 });

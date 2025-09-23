@@ -11,12 +11,12 @@ class ReservationController extends Controller
     {
         // Semua reservasi (dari semua user)
         $reservations = Reservation::with('room')->latest()->get();
-        return view('pages.admin.reservations.index', compact('reservations'));
+        return view('reservations.index', compact('reservations'));
     }
 
     public function show(Reservation $reservation)
     {
-        return view('pages.admin.reservations.show', compact('reservation'));
+        return view('reservations.show', compact('reservation'));
     }
 
     public function edit(Reservation $reservation)
