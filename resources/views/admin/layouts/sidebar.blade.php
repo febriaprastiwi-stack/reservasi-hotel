@@ -2,6 +2,14 @@
     <h4 class="text-center mb-4">GRAND ROYAL HOTEL</h4>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto">
+
+        <li class="nav-item">
+            <a href="{{ route('admin.dashboard') }}"
+                class="nav-link text-white {{ request()->is('dashboard*') ? 'active' : '' }}">
+                <i class="bi bi-building"></i> Dashboard
+            </a>
+        </li>
+
         <li class="nav-item">
             <a href="{{ route('rooms.index') }}"
                 class="nav-link text-white {{ request()->is('rooms*') ? 'active' : '' }}">

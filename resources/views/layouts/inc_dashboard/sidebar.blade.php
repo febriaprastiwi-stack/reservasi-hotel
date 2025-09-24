@@ -7,7 +7,7 @@
             </a>
         </li>
         <li class="nav-item">
-            <a href="{{ route('home.reservations.index') }}"
+            <a href="{{ route('reservations.index') }}"
                 class="nav-link {{ request()->is('reservations*') ? 'active' : '' }}">
                 Daftar Reservasi
             </a>

@@ -51,9 +51,10 @@
                 <a href="{{ route('home.rooms.index') }}" class="btn btn-primary">
                     Pesan Lagi
                 </a>
-                <a href="{{ route('home') }}" class="btn btn-outline-secondary">
+                <a href="{{ route('home.rooms.index') }}" class="btn btn-outline-secondary">
                     Kembali ke Beranda
                 </a>
+
             @else
                 <p class="text-muted">Tidak ada data pemesanan ditemukan.</p>
             @endif

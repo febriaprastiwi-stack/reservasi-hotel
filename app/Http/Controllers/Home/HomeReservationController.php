@@ -10,23 +10,9 @@ use Carbon\Carbon;
 
 class HomeReservationController extends Controller
 {
-    public function index()
-    {
-        // Ambil email dari session (diset saat booking)
-        $email = session('reservation_email');
-
-        $reservations = collect();
-
-        if ($email) {
-            $reservations = Reservation::with('room')
-                ->where('email', $email)
-                ->latest()
-                ->get();
-        }
-
-        return view('home.reservations.index', compact('reservations'));
-    }
-
+    /**
+     * Form booking (dari halaman detail kamar).
+     */
     public function create(Request $request)
     {
         $room = null;
@@ -38,6 +24,9 @@ class HomeReservationController extends Controller
         return view('home.reservations.create', compact('room'));
     }
 
+    /**
+     * Simpan data booking.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -53,11 +42,11 @@ class HomeReservationController extends Controller
         $room = Room::findOrFail($request->room_id);
 
         // Hitung lama menginap
-        $check_in = Carbon::parse($request->check_in);
+        $check_in  = Carbon::parse($request->check_in);
         $check_out = Carbon::parse($request->check_out);
-        $nights = max(1, $check_in->diffInDays($check_out)); // kalau sama tanggal, tetap 1 malam
+        $nights    = max(1, $check_in->diffInDays($check_out)); // minimal 1 malam
 
-        $totalPrice = $nights * $room->harga;
+        $totalPrice = $nights * $room->harga_per_malam;
 
         // Simpan reservasi
         $reservation = Reservation::create([
@@ -78,20 +67,21 @@ class HomeReservationController extends Controller
                          ->with('success', 'Pemesanan berhasil! Total: Rp ' . number_format($totalPrice, 0, ',', '.'));
     }
 
+    /**
+     * Tampilkan riwayat (booking terakhir user).
+     */
     public function history()
-{
-    $email = session('reservation_email');
+    {
+        $email = session('reservation_email');
+        $reservation = null;
 
-    $reservation = null;
+        if ($email) {
+            $reservation = Reservation::with('room')
+                ->where('email', $email)
+                ->latest()
+                ->first();
+        }
 
-    if ($email) {
-        $reservation = Reservation::with('room')
-            ->where('email', $email)
-            ->latest()
-            ->first(); // hanya ambil 1 reservasi terakhir
+        return view('home.reservations.history', compact('reservation'));
     }
-
-    return view('home.reservations.history', compact('reservation'));
-}
-
 }

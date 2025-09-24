@@ -72,9 +72,8 @@ Route::get('/dashboard', function (Request $request) {
 })->name('dashboard');
 
 
-Route::prefix('dashboard')->name('dashboard.')->group(function () {
-    Route::resource('reservations', ReservationController::class);
-});
+Route::resource('reservations', ReservationController::class);
+
 
 // =============================
 // Halaman Home

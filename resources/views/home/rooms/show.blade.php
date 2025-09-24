@@ -33,7 +33,7 @@
 
             <div class="mt-4 d-flex gap-3">
                 {{-- Tombol pesan --}}
-                <a href="{{ route('reservations.create', ['room_id' => $room->id]) }}" 
+                <a href="{{ route('home.reservations.create', ['room_id' => $room->id]) }}" 
                    class="btn btn-dark px-4">Book Now</a>
                 
                 {{-- Kembali ke daftar kamar --}}
