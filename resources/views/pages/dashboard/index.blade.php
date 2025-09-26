@@ -3,9 +3,11 @@
 @section('title', 'Dashboard - Grand Royal Hotel')
 
 @section('content')
-    <h2 class="mb-4">Dashboard</h2>
+    <div class="container-flui**d" style="margin-left: 0px; padding-top: 80px;">
+    <h2 class="mb-4 fw-bold text-primary">📊 Dashboard</h2>
 
     <!-- Row Cards -->
+    
     <div class="row mb-4">
         <div class="col-md-3">
             <div class="card text-white bg-primary p-3">

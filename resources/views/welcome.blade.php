@@ -2,82 +2,185 @@
 <html lang="id">
 
 <head>
-
     <meta charset="utf-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Welcome - Grand Royal Hotel</title>
 
-
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Lato:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
         body {
-            padding-top: 56px;
-            /* Space for fixed navbar */
+            margin: 0;
+            font-family: 'Lato', sans-serif;
+            background-color: #0d0d0d;
+            color: #fff;
         }
 
+        /* Navbar Elegan */
+        .navbar {
+            background: rgba(0, 0, 0, 0.65) !important;
+            backdrop-filter: blur(8px);
+            padding: 15px 30px;
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.7rem;
+            color: #d4af37 !important;
+            letter-spacing: 2px;
+        }
+
+        .nav-link {
+            color: #fff !important;
+            margin-left: 20px;
+            position: relative;
+            font-weight: 500;
+        }
+
+        .nav-link::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #f5d76e, #d4af37);
+            transition: 0.4s;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        /* Hero Section */
         .hero-section {
             height: 100vh;
-            background-image: url("{{ asset('img/hotel-bg.jpg') }}");
-            /* Ganti dengan path gambar Anda */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
+            background: url("{{ asset('img/hotel-bg.jpg') }}") center/cover no-repeat;
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            color: white;
-            position: relative;
         }
 
         .hero-section::before {
-            content: '';
+            content: "";
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            z-index: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(15, 15, 15, 0.9));
         }
 
         .hero-content {
             z-index: 1;
-            padding: 20px;
         }
 
-        .main-heading-font {
+        /* Logo Wrapper Animasi + Shimmer */
+        .logo-wrapper {
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: logoFadeIn 1.5s ease-in-out forwards, logoShine 3s linear infinite;
+        }
+
+        .logo-wrapper img {
+            height: 80px;
+            width: auto;
+            display: inline-block;
+        }
+
+        /* Animasi Judul */
+        .hero-content h1 {
             font-family: 'Playfair Display', serif;
+            font-size: 4rem;
             font-weight: 700;
+            color: #f5d76e;
+            text-transform: uppercase;
+            text-shadow: 0px 6px 20px rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            animation: titleFadeIn 1.5s ease-in-out forwards;
+            animation-delay: 0.5s; /* delay setelah logo */
+        }
+
+        /* Animasi Paragraf */
+        .hero-content p {
+            font-size: 1.3rem;
+            margin-top: 15px;
+            color: #ddd;
+            opacity: 0;
+            animation: textFadeIn 1.5s ease-in-out forwards;
+            animation-delay: 1s; /* delay setelah judul */
+        }
+
+        /* Tombol Emas Glowing */
+        .btn-gold {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 14px 45px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #111;
+            background: linear-gradient(45deg, #f5d76e, #d4af37);
+            border: none;
+            letter-spacing: 3px;
+            box-shadow: 0 0 20px rgba(245, 215, 110, 0.6);
+            transition: all 0.4s ease;
+            opacity: 0;
+            animation: buttonFadeIn 1.5s ease-in-out forwards;
+            animation-delay: 1.3s; /* delay setelah paragraf */
+        }
+
+        .btn-gold:hover {
+            background: linear-gradient(45deg, #d4af37, #f5d76e);
+            transform: scale(1.07);
+            box-shadow: 0 0 30px rgba(245, 215, 110, 0.9);
+        }
+
+        /* Keyframes Animasi */
+        @keyframes logoFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes logoShine {
+            0% { filter: drop-shadow(0 0 2px #f5d76e); }
+            50% { filter: drop-shadow(0 0 8px #fff5c3); }
+            100% { filter: drop-shadow(0 0 2px #f5d76e); }
+        }
+
+        @keyframes titleFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes textFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes buttonFadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">GRAND ROYAL HOTEL</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <span class="navbar-toggler-icon text-white"></span>
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('login') }}">LOGIN</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('dashboard') }}">DASHBOARD</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">LOGIN</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('dashboard') }}">DASHBOARD</a></li>
                 </ul>
             </div>
         </div>
@@ -85,17 +188,18 @@
 
     <header class="hero-section">
         <div class="hero-content">
-            <h1 class="display-4 main-heading-font">Welcome to Grand Royal Hotel</h1>
-            <p class="lead">Enjoy The Experience of Comfort & Luxury</p>
-            <a href="{{ route('home.rooms.index') }}" class="btn btn-lg btn-primary mt-4" style="letter-spacing: 5px;">
-                HOME
-            </a>
+            {{-- Logo hotel di atas judul --}}
+            <div class="logo-wrapper">
+                <img src="{{ asset('img/logo.jpg') }}" alt="Hotel Logo">
+            </div>
+
+            <h1>Grand Royal Hotel</h1>
+            <p>Experience The Pinnacle of Luxury & Comfort</p>
+            <a href="{{ route('home.rooms.index') }}" class="btn btn-gold">Explore Now</a>
         </div>
     </header>
 
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 
 </html>

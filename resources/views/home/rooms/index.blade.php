@@ -53,7 +53,6 @@
                                 <p class="mb-1"><strong>No:</strong> {{ $room->nomor_kamar }}</p>
                                 <p class="mb-1"><strong>Beds:</strong> {{ $room->jumlah_kasur }}</p>
                                 <p class="mb-1"><strong>Fasilitas:</strong> {{ $room->fasilitas_kamar ?? '-' }}</p>
-                                <p class="mb-1"><strong>Fitur:</strong> {{ $room->features }}</p>
                                 <p class="mb-2 text-success fw-bold">Rp {{ number_format($room->harga_per_malam, 0, ',', '.') }} / night</p>
 
                                 <div class="mt-auto d-flex gap-2">

@@ -24,7 +24,6 @@
             
             <p><strong>Beds:</strong> {{ $room->jumlah_kasur }}</p>
             <p><strong>Fasilitas:</strong> {{ $room->fasilitas_kamar }}</p>
-            <p class="mb-1"><strong>Fitur:</strong> {{ $room->features }}</p>
             
             {{-- Harga per malam --}}
             @if (!empty($room->harga_per_malam))
@@ -39,7 +38,7 @@
                 {{-- Kembali ke daftar kamar --}}
                 <a href="{{ route('home.rooms.index') }}" 
                    class="btn btn-outline-secondary px-4">Back</a>
-            </div>
+                </div>
         </div>
     </div>
 </div>

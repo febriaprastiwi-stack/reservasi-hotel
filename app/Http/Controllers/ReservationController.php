@@ -7,27 +7,36 @@ use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    // List semua reservasi user login
-    public function index()
+    // Halaman daftar semua reservasi (khusus admin/resepsionis)
+    public function index(Request $request)
     {
-        $reservations = Reservation::with('room')
-            ->where('email', auth()->user()->email ?? session('reservation_email'))
-            ->latest()
-            ->get();
+        $query = Reservation::with('room');
 
-        return view('home.reservations.history', compact('reservations'));
+        if ($request->has('search') && $request->search != '') {
+            $search = $request->search;
+            $query->where('name', 'like', "%$search%")
+                ->orWhere('email', 'like', "%$search%")
+                ->orWhereHas('room', function($q) use ($search) {
+                    $q->where('jenis_kamar', 'like', "%$search%")
+                        ->orWhere('nomor_kamar', 'like', "%$search%");
+                });
+        }
+
+        $reservations = $query->latest()->get();
+
+        return view('pages.reservations.index', compact('reservations'));
     }
 
     // Detail reservasi
     public function show(Reservation $reservation)
     {
-        return view('home.reservations.show', compact('reservation'));
+        return view('pages.reservations.show', compact('reservation'));
     }
 
     // Edit reservasi
     public function edit(Reservation $reservation)
     {
-        return view('home.reservations.edit', compact('reservation'));
+        return view('pages.reservations.edit', compact('reservation'));
     }
 
     // Update reservasi

@@ -13,6 +13,7 @@ class Reservation extends Model
         'check_in',
         'check_out',
         'guests',
+        'status',
         'payment',
         'total_price',
     ];
@@ -20,11 +21,6 @@ class Reservation extends Model
     public function room()
     {
         return $this->belongsTo(Room::class);
-    }
-
-    public function customer()
-    {
-        return $this->belongsTo(Customer::class);
     }
 
     public function payment()
