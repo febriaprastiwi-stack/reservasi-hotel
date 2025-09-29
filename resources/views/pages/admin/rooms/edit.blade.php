@@ -10,7 +10,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2"
              style="border-color:#d4af37 !important;">
             <h3 class="fw-bold" style="color:#d4af37;">
-                ✨ Edit Kamar
+                 Edit Kamar
             </h3>
             <a href="{{ route('rooms.index') }}" 
                class="btn btn-outline-dark rounded-pill px-4 fw-bold"

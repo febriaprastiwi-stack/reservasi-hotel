@@ -61,10 +61,12 @@
                                         Rp {{ number_format($reservation->total_price, 0, ',', '.') }}
                                     </td>
                                     <td>
-                                        @if ($reservation->status == 'confirmed')
-                                            <span class="badge bg-success px-3 py-2">Confirmed</span>
-                                        @elseif ($reservation->status == 'pending')
-                                            <span class="badge bg-warning text-dark px-3 py-2">Pending</span>
+                                        @if ($reservation->status == 'active')
+                                            <span class="badge bg-success px-3 py-2">Active</span>
+                                        @elseif ($reservation->status == 'completed')
+                                            <span class="badge bg-primary px-3 py-2">Completed</span>
+                                        @elseif ($reservation->status == 'canceled')
+                                            <span class="badge bg-danger px-3 py-2">Canceled</span>
                                         @else
                                             <span class="badge bg-secondary px-3 py-2">{{ ucfirst($reservation->status) }}</span>
                                         @endif

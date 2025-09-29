@@ -19,7 +19,7 @@ return new class extends Migration
             $table->date('check_in');
             $table->date('check_out');
             $table->integer('guests');
-            $table->enum('status', ['pending', 'confirmed', 'cancelled'])->default('pending');
+            $table->enum('status', ['active', 'canceled', 'completed'])->default('active');
             $table->string('payment')->nullable(); 
             $table->decimal('total_price', 12, 2)->default(0);
             $table->timestamps();

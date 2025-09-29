@@ -27,6 +27,18 @@
                 </div>
             </div>
 
+            {{-- Payment --}}
+            <div class="mb-4">
+                <label class="form-label fw-semibold text-dark">Payment Method</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-white text-secondary border-end-0">
+                        <i class="bi bi-credit-card-2-front-fill"></i>
+                    </span>
+                    <input type="text" name="payment" class="form-control border-start-0" 
+                           value="{{ old('payment', $reservation->payment) }}" required>
+                </div>
+            </div>
+
             {{-- Status --}}
             <div class="mb-4">
                 <label class="form-label fw-semibold text-dark">Status</label>
@@ -35,9 +47,9 @@
                         <i class="bi bi-info-circle-fill"></i>
                     </span>
                     <select name="status" class="form-select border-start-0" required>
-                        <option value="pending" {{ $reservation->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="confirmed" {{ $reservation->status == 'confirmed' ? 'selected' : '' }}>Confirmed</option>
-                        <option value="cancelled" {{ $reservation->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                        <option value="active" {{ $reservation->status == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="canceled" {{ $reservation->status == 'canceled' ? 'selected' : '' }}>Canceled</option>
+                        <option value="completed" {{ $reservation->status == 'completed' ? 'selected' : '' }}>Completed</option>
                     </select>
                 </div>
             </div>

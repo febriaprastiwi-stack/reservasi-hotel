@@ -36,7 +36,7 @@ class HomeReservationController extends Controller
             'check_in'  => 'required|date|after_or_equal:today',
             'check_out' => 'required|date|after:check_in',
             'guests'    => 'required|integer|min:1',
-            'payment'   => 'required|string',
+            'payment'   => 'nullable|string',
         ]);
 
         $room = Room::findOrFail($request->room_id);
@@ -44,7 +44,7 @@ class HomeReservationController extends Controller
         // Hitung lama menginap
         $check_in  = Carbon::parse($request->check_in);
         $check_out = Carbon::parse($request->check_out);
-        $nights    = max(1, $check_in->diffInDays($check_out)); // minimal 1 malam
+        $nights    = max(1, $check_in->diffInDays($check_out));
 
         $totalPrice = $nights * $room->harga_per_malam;
 
@@ -56,15 +56,17 @@ class HomeReservationController extends Controller
             'check_in'    => $request->check_in,
             'check_out'   => $request->check_out,
             'guests'      => $request->guests,
+            'status'      => 'active', // ✅ isi sesuai migration
             'payment'     => $request->payment,
             'total_price' => $totalPrice,
         ]);
 
-        // Simpan email ke session
+
+        // Simpan email user ke session
         session(['reservation_email' => $request->email]);
 
         return redirect()->route('home.reservations.history')
-                         ->with('success', 'Pemesanan berhasil! Total: Rp ' . number_format($totalPrice, 0, ',', '.'));
+                        ->with('success', 'Pemesanan berhasil! Total: Rp ' . number_format($totalPrice, 0, ',', '.'));
     }
 
     /**
@@ -84,4 +86,6 @@ class HomeReservationController extends Controller
 
         return view('home.reservations.history', compact('reservation'));
     }
+
+
 }

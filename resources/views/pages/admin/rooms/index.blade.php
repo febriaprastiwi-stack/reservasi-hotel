@@ -3,13 +3,13 @@
 @section('title', 'Data Kamar')
 
 @section('content')
-<div class="content" style="background:#fff; min-height:100vh; padding:50px 0;">
+<div class="content" style="background:#f9f9f9; min-height:100vh; padding:50px 0;">
     <div class="container">
 
         <!-- Header -->
         <div class="d-flex justify-content-between align-items-center mb-5">
             <h2 class="fw-bold" style="color:#b8860b; text-shadow:0 1px 3px rgba(0,0,0,0.1);">
-                ✨ Daftar Kamar Hotel
+                🛏 Daftar Kamar Hotel
             </h2>
             <a href="{{ route('rooms.create') }}" 
                class="btn rounded-pill fw-bold text-white px-4 shadow tambah-btn">
@@ -21,8 +21,7 @@
         <div class="row g-4">
             @forelse($rooms as $room)
             <div class="col-md-6 col-lg-4">
-                <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100"
-                     style="background:#fff;">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden h-100 room-card">
 
                     <!-- Gambar -->
                     <div class="position-relative">
@@ -36,18 +35,24 @@
                                 No Image
                             </div>
                         @endif
-                        <span class="badge position-absolute top-0 end-0 m-2 px-3 py-2 shadow-sm harga-badge">
-                            Rp {{ number_format($room->harga_per_malam, 0, ',', '.') }}
-                        </span>
+                        <div class="harga-box position-absolute bottom-0 start-0 m-3 px-3 py-2 shadow">
+                            <span class="fw-bold">Rp {{ number_format($room->harga_per_malam, 0, ',', '.') }}</span><br>
+                            <small class="text-white-50">/ malam</small>
+                        </div>
                     </div>
 
                     <!-- Body -->
                     <div class="card-body d-flex flex-column">
-                        <h5 class="fw-bold text-dark mb-2">{{ $room->jenis_kamar }}</h5>
-                        <p class="text-muted mb-2">No. Kamar: <span class="fw-bold">{{ $room->nomor_kamar }}</span></p>
-                        <p class="small text-secondary mb-2">
-                            <i class="bi bi-star-fill text-warning"></i> Fasilitas: {{ Str::limit($room->fasilitas_kamar, 50) }}
-                        </p>
+                        <h5 class="fw-bold text-dark mb-1">{{ $room->jenis_kamar }}</h5>
+                        <p class="text-muted small mb-2">No. Kamar: <span class="fw-bold">{{ $room->nomor_kamar }}</span></p>
+                        
+                        <!-- Fasilitas dalam badge -->
+                        <div class="mb-3">
+                            @foreach(explode(',', $room->fasilitas_kamar) as $fasilitas)
+                                <span class="badge fasilitas-badge">{{ trim($fasilitas) }}</span>
+                            @endforeach
+                        </div>
+
                         <p class="small text-secondary mb-4">
                             <i class="bi bi-hospital"></i> Kasur: {{ $room->jumlah_kasur }}
                         </p>
@@ -86,6 +91,18 @@
 
 <!-- Custom Style -->
 <style>
+    /* Card Room */
+    .room-card {
+        background:#fff;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(212,175,55,0.2);
+    }
+    .room-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+        border-color: #d4af37;
+    }
+
     /* Tombol Tambah */
     .tambah-btn {
         background: linear-gradient(135deg, #d4af37, #b8860b);
@@ -98,13 +115,23 @@
         box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
     }
 
-    /* Badge Harga */
-    .harga-badge {
-        background: linear-gradient(135deg,#d4af37,#b8860b);
-        color:#fff; 
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 0.85rem;
+    /* Harga Box */
+    .harga-box {
+        background: rgba(0,0,0,0.6);
+        color:#fff;
+        border-radius: 10px;
+        font-size: 0.9rem;
+    }
+
+    /* Badge Fasilitas */
+    .fasilitas-badge {
+        background: #f8f1d4;
+        color: #b8860b;
+        border: 1px solid #e6c84f;
+        margin: 2px;
+        font-size: 0.75rem;
+        border-radius: 20px;
+        padding: 5px 10px;
     }
 
     /* Detail Button */
