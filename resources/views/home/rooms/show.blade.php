@@ -43,18 +43,24 @@
                     @endif
 
                     <div class="mt-4 d-flex gap-3">
-                        {{-- Tombol pesan --}}
+                    {{-- Tombol pesan --}}
+                    @if ($room->status === 'reserved')
+                        <button class="btn btn-secondary px-4 py-2 rounded-pill" disabled>
+                            <i class="bi bi-lock-fill"></i> Not Available
+                        </button>
+                    @else
                         <a href="{{ route('home.reservations.create', ['room_id' => $room->id]) }}" 
-                           class="btn btn-book px-4 py-2">
+                        class="btn btn-book px-4 py-2 rounded-pill">
                             <i class="bi bi-calendar-check"></i> Book Now
                         </a>
+                    @endif
 
-                        {{-- Kembali ke daftar kamar --}}
-                        <a href="{{ route('home.rooms.index') }}" 
-                           class="btn btn-outline-secondary px-4 py-2 rounded-pill">
-                            <i class="bi bi-arrow-left"></i> Back
-                        </a>
-                    </div>
+                    {{-- Kembali ke daftar kamar --}}
+                    <a href="{{ route('home.rooms.index') }}" 
+                    class="btn btn-outline-secondary px-4 py-2 rounded-pill">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </a>
+                </div>
                 </div>
             </div>
         </div>

@@ -3,90 +3,123 @@
 @section('title', 'Dashboard - Grand Royal Hotel')
 
 @section('content')
-    <div class="container-flui**d" style="margin-left: 0px; padding-top: 80px;">
-    <h2 class="mb-4 fw-bold text-primary">📊 Dashboard</h2>
-
-    <!-- Row Cards -->
-    
-    <div class="row mb-4">
-        <div class="col-md-3">
-            <div class="card text-white bg-primary p-3">
-                <h6>Total Reservasi</h6>
-                <h4>120</h4>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-success p-3">
-                <h6>Total Pendapatan</h6>
-                <h4>Rp 85.000.000</h4>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-warning p-3">
-                <h6>Kamar Tersedia</h6>
-                <h4>45</h4>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card text-white bg-danger p-3">
-                <h6>Kamar Terpakai</h6>
-                <h4>75</h4>
-            </div>
-        </div>
+<div class="content-wrapper fade-in">
+    <div class="text-center mb-5">
+        <h1 class="mb-3 fw-bold text-gold">Selamat Datang di Dashboard Khusus Admin & Resepsionis</h1>
+        <p class="text-muted fs-5">Kelola data reservasi dan pendapatan dengan mudah dan efisien.</p>
     </div>
 
-    <!-- Row Charts -->
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card p-3">
-                <h6>Earnings Overview</h6>
-                <canvas id="earningsChart"></canvas>
+    <!-- Cards -->
+    <div class="container mt-4">
+        <div class="row justify-content-center g-4">
+            
+            <!-- Card Reservasi -->
+            <div class="col-md-4 col-sm-6">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body text-center d-flex flex-column justify-content-center">
+                        <div class="icon-wrapper mb-3">
+                            <i class="bi bi-house-door-fill"></i>
+                        </div>
+                        <h5 class="card-title mb-2">Reservations</h5>
+                        <p class="card-text">Kelola data reservasi hotel dengan mudah.</p>
+                        <a href="{{ route('reservations.index') }}" class="btn btn-main mt-auto">Kelola Reservasi</a>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card p-3">
-                <h6>Revenue Sources</h6>
-                <canvas id="revenueChart"></canvas>
+
+            <!-- Card Pendapatan -->
+            <div class="col-md-4 col-sm-6">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body text-center d-flex flex-column justify-content-center">
+                        <div class="icon-wrapper mb-3">
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+                        <h5 class="card-title mb-2">Pendapatan</h5>
+                        <p class="card-text">Kelola pendapatan hotel secara profesional.</p>
+                        <a href="{{ route('pendapatan.index') }}" class="btn btn-main mt-auto">Lihat Pendapatan</a>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
+</div>
+
+<style>
+    /* Wrapper dan background putih */
+    .content-wrapper {
+        margin-left: 0px;
+        margin-top: 80px;
+        padding: 50px;
+
+        
+        color: #1e1e2f;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    /* Fade-in animasi */
+    .fade-in {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 1s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Warna gold hanya untuk judul */
+    .text-gold {
+        color: #30a192;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.15);
+    }
+
+    /* Card dashboard */
+    .dashboard-card {
+        background: #fff;
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid rgba(0,0,0,0.08);
+        transition: transform 0.3s, box-shadow 0.3s;
+        box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+
+    /* Icon dalam kartu */
+    .dashboard-card .icon-wrapper {
+        font-size: 3rem;
+        color: #004d4d; /* warna sesuai navbar/sidebar */
+    }
+
+    /* Button warna sesuai sidebar */
+    .btn-main {
+        background-color: #004d4d;
+        border: none;
+        color: #fff;
+        font-weight: 600;
+        padding: 8px 18px;
+        border-radius: 8px;
+        transition: all 0.3s;
+    }
+
+    .btn-main:hover {
+        background-color: #006666;
+        color: #fff;
+    }
+
+    /* Responsif */
+    @media (max-width: 768px) {
+        .content-wrapper {
+            margin-left: 0;
+            margin-top: 70px;
+        }
+    }
+</style>
 @endsection
-
-@push('scripts')
-    <script>
-        // Chart 1: Earnings per Month
-        var ctx1 = document.getElementById('earningsChart').getContext('2d');
-        var earningsChart = new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'],
-                datasets: [{
-                    label: 'Earnings (Rp)',
-                    data: [2000000, 4000000, 4000000, 6000000, 2000000, 3000000, 5000000, 4000000, 4500000,
-                        3000000, 3500000, 5000000
-                    ],
-                    backgroundColor: 'rgba(255, 99, 132, 0.6)'
-                }]
-            }
-        });
-
-        // Chart 2: Revenue Sources
-        var ctx2 = document.getElementById('revenueChart').getContext('2d');
-        var revenueChart = new Chart(ctx2, {
-            type: 'doughnut',
-            data: {
-                labels: ['Room', 'Food', 'Event', 'Other'],
-                datasets: [{
-                    label: 'Revenue',
-                    data: [60, 25, 10, 5],
-                    backgroundColor: [
-                        'rgba(54, 162, 235, 0.7)',
-                        'rgba(255, 206, 86, 0.7)',
-                        'rgba(75, 192, 192, 0.7)',
-                        'rgba(255, 99, 132, 0.7)'
-                    ]
-                }]
-            }
-        });
-    </script>
-@endpush

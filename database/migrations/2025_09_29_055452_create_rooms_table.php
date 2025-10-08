@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('jumlah_kasur')->default(1);
             $table->string('gambar_kasur')->nullable();
             $table->decimal('harga_per_malam', 12, 2)->default(0);
-            $table->string('status')->default('available')->index();
+            $table->string('status')->default('available');
             $table->timestamps();
         });
     }

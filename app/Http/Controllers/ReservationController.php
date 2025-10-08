@@ -50,12 +50,20 @@ class ReservationController extends Controller
             'payment' => 'nullable|string',
         ]);
 
-        // Update hanya field yang ada di form edit
+        // Update data reservasi
         $reservation->update([
             'guests'  => $request->guests,
             'status'  => $request->status,
             'payment' => $request->payment,
         ]);
+
+        // Update status kamar sesuai status reservasi
+        $room = $reservation->room;
+        if ($request->status === 'active') {
+            $room->update(['status' => 'reserved']);
+        } elseif (in_array($request->status, ['completed', 'canceled'])) {
+            $room->update(['status' => 'available']);
+        }
 
         return redirect()->route('reservations.index')
                         ->with('success', 'Reservation updated successfully.');
@@ -69,4 +77,21 @@ class ReservationController extends Controller
         return redirect()->route('reservations.index')
                          ->with('success', 'Reservation deleted successfully.');
     }
+
+   public function bulkDelete(Request $request)
+    {
+        $ids = $request->input('ids', []);
+
+        if (empty($ids)) {
+            return redirect()->route('reservations.index')
+                ->with('error', 'Tidak ada reservasi yang dipilih.');
+        }
+
+        Reservation::whereIn('id', $ids)->delete();
+
+        return redirect()->route('reservations.index')
+            ->with('success', count($ids) . ' reservasi berhasil dihapus.');
+    }
+
+
 }

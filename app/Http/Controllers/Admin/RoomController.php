@@ -120,4 +120,21 @@ class RoomController extends Controller
 
         return redirect()->route('rooms.index')->with('success', 'Kamar berhasil dihapus.');
     }
+
+    public function bulkDelete(Request $request)
+    {
+        $ids = explode(',', $request->ids);
+
+        // Cek apakah ada ID dikirim
+        if (count($ids) > 0) {
+            Room::whereIn('id', $ids)->delete();
+        }
+
+        // Redirect langsung ke halaman daftar kamar
+        return redirect()
+            ->route('rooms.index')
+            ->with('success', 'Kamar terpilih berhasil dihapus.');
+    }
+
+
 }

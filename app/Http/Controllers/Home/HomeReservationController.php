@@ -56,11 +56,13 @@ class HomeReservationController extends Controller
             'check_in'    => $request->check_in,
             'check_out'   => $request->check_out,
             'guests'      => $request->guests,
-            'status'      => 'active', // ✅ isi sesuai migration
+            'status'      => 'active', 
             'payment'     => $request->payment,
             'total_price' => $totalPrice,
         ]);
 
+        // Update status kamar jadi "reserved"
+        $room->update(['status' => 'reserved']);
 
         // Simpan email user ke session
         session(['reservation_email' => $request->email]);
@@ -86,6 +88,4 @@ class HomeReservationController extends Controller
 
         return view('home.reservations.history', compact('reservation'));
     }
-
-
 }

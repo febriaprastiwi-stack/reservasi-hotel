@@ -30,6 +30,7 @@
                     <form action="{{ route('home.reservations.store') }}" method="POST">
                         @csrf
 
+
                         {{-- Full Name --}}
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Full Name</label>

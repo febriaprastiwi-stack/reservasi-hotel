@@ -7,7 +7,24 @@
     <div class="container">
         <!-- Judul -->
         <h2 class="text-center mb-4 section-title">OUR ROOMS</h2>
-        <p class="text-center text-muted">{{ $rooms->count() }} Rooms Available to Make Your Stay Memorable</p>
+        <p class="text-center text-muted">
+            {{ $rooms->where('status', '!=', 'reserved')->count() }} 
+            Rooms Available to Make Your Stay Memorable
+        </p>
+
+        <!-- Notifikasi kecil hasil filter -->
+        @if(request('check_in') || request('check_out') || request('person'))
+            <div class="alert alert-info alert-dismissible fade show text-center mb-4 small" role="alert">
+                Menampilkan hasil untuk:
+                @if(request('check_in')) <strong>Check-in:</strong> {{ request('check_in') }} @endif
+                @if(request('check_out')) | <strong>Check-out:</strong> {{ request('check_out') }} @endif
+                @if(request('person')) | <strong>Tamu:</strong> {{ request('person') }} orang @endif
+
+                <!-- Tombol close -->
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="float: right;"></button>
+            </div>
+        @endif
+
 
         <div class="row">
             {{-- Sidebar Filter --}}
@@ -17,17 +34,25 @@
                     <form method="GET" action="{{ route('home.rooms.index') }}">
                         <div class="mb-3">
                             <label class="form-label">Check-in</label>
-                            <input type="date" name="check_in" class="form-control">
+                            <input type="date" name="check_in" class="form-control" value="{{ request('check_in') }}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Check-out</label>
-                            <input type="date" name="check_out" class="form-control">
+                            <input type="date" name="check_out" class="form-control" value="{{ request('check_out') }}">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Guests</label>
-                            <input type="number" name="person" class="form-control" value="1" min="1">
+                            <input type="number" name="person" class="form-control" value="{{ request('person', 1) }}" min="1">
                         </div>
-                        <button type="submit" class="btn filter-btn w-100">SEARCH</button>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn filter-btn w-100">SEARCH</button>
+
+                            {{-- Reset hanya muncul kalau ada filter --}}
+                            @if(request('check_in') || request('check_out') || request('person'))
+                                <a href="{{ route('home.rooms.index') }}" class="btn btn-outline-secondary w-50">Reset</a>
+                            @endif
+                        </div>
                     </form>
                 </div>
             </div>
@@ -70,7 +95,7 @@
                                     <p class="mb-1"><strong>No:</strong> {{ $room->nomor_kamar }}</p>
                                     <p class="mb-1"><strong>Beds:</strong> {{ $room->jumlah_kasur }}</p>
 
-                                    {{-- Fasilitas sebagai badge dengan icon --}}
+                                    {{-- Fasilitas sebagai badge --}}
                                     <div class="mb-3">
                                         @foreach (explode(',', $room->fasilitas_kamar ?? '-') as $fasilitas)
                                             <span class="badge fasilitas-badge">
@@ -87,11 +112,17 @@
                                     </div>
 
                                     <div class="mt-auto d-flex gap-2">
-                                        {{-- Booking --}}
-                                        <a href="{{ route('home.reservations.create', ['room_id' => $room->id]) }}" 
-                                           class="btn btn-book w-50">
-                                            <i class="bi bi-calendar-check"></i> Book
-                                        </a>
+                                        @if ($room->status === 'reserved')
+                                            <button class="btn btn-secondary w-50 py-2 rounded-pill" disabled>
+                                                Not Available
+                                            </button>
+                                        @else
+                                            <a href="{{ route('home.reservations.create', ['room_id' => $room->id]) }}" 
+                                               class="btn btn-dark w-50 py-2 rounded-pill">
+                                                Book
+                                            </a>
+                                        @endif
+                                        
                                         {{-- Detail kamar --}}
                                         <a href="{{ route('home.rooms.show', $room->id) }}" 
                                            class="btn btn-detail w-50">
@@ -145,12 +176,11 @@
     }
 
     .badge.bg-danger {
-    background: linear-gradient(135deg, #c0392b, #e74c3c);
-    font-weight: bold;
-    font-size: 0.85rem;
-    border-radius: 20px;
+        background: linear-gradient(135deg, #c0392b, #e74c3c);
+        font-weight: bold;
+        font-size: 0.85rem;
+        border-radius: 20px;
     }
-
 
     /* Harga box */
     .harga-box {
@@ -217,6 +247,17 @@
         transform: translateY(-2px);
     }
 
+    /* Reset button */
+    .btn-outline-secondary {
+        border-radius: 50px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+    .btn-outline-secondary:hover {
+        background: #e0e0e0;
+        color: var(--primary);
+    }
+
     /* Judul */
     .section-title {
         color: var(--primary);
@@ -253,3 +294,4 @@
     });
 </script>
 @endsection
+

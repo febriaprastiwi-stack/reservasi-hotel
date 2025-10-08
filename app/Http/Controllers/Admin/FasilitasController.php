@@ -43,6 +43,11 @@ class FasilitasController extends Controller
         return view('pages.admin.fasilitas.edit', compact('fasilita'));
     }
 
+    public function show(Fasilitas $fasilita)
+    {
+        return view('pages.admin.fasilitas.show', compact('fasilita'));
+    }
+
     public function update(Request $request, Fasilitas $fasilita)
     {
         $request->validate([

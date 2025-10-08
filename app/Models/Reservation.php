@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Reservation extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'room_id',
         'name',
@@ -20,11 +23,6 @@ class Reservation extends Model
 
     public function room()
     {
-        return $this->belongsTo(Room::class);
-    }
-
-    public function payment()
-    {
-        return $this->hasOne(Payments::class);
+        return $this->belongsTo(Room::class, 'room_id');
     }
 }

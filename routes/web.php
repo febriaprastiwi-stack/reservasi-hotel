@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\PendapatanController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\FasilitasController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Home\KamarController;
+use App\Http\Controllers\Home\FacilitiesController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\Home\HomeReservationController;
 use Illuminate\Http\Request;
@@ -41,7 +43,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::resource('rooms', RoomController::class);
     Route::resource('fasilitas', FasilitasController::class);
+    Route::delete('/admin/rooms/bulk-delete', [RoomController::class, 'bulkDelete'])->name('rooms.bulkDelete');
 });
+
 
 // =============================
 // Halaman verifikasi sebelum dashboard
@@ -71,23 +75,31 @@ Route::get('/dashboard', function (Request $request) {
     return view('pages.dashboard.index');
 })->name('dashboard');
 
+Route::get('/pendapatan', [PendapatanController::class, 'index'])->name('pendapatan.index');
 
 Route::resource('reservations', ReservationController::class);
+Route::delete('/reservations', [ReservationController::class, 'bulkDelete'])->name('reservations.bulkDelete');
 
 
 // =============================
 // Halaman Home
 // =============================
-Route::prefix('home')->name('home.')->group(function () {
+    Route::prefix('home')->name('home.')->group(function () {
     // Route untuk Rooms
     Route::get('/rooms', [KamarController::class, 'index'])->name('rooms.index');
     Route::get('/rooms/{room}', [KamarController::class, 'show'])->name('rooms.show');
 
+
+    Route::prefix('home')->group(function () {
+    Route::get('/fasilitas', [FacilitiesController::class, 'index'])->name('fasilitas.index');
+    Route::get('/fasilitas/{id}', [FacilitiesController::class, 'show'])->name('fasilitas.show');
+    
     // Route untuk Reservations
     Route::prefix('reservations')->name('reservations.')->group(function () {
         Route::get('/', [HomeReservationController::class, 'index'])->name('index');
         Route::get('/create', [HomeReservationController::class, 'create'])->name('create');
         Route::post('/', [HomeReservationController::class, 'store'])->name('store');
         Route::get('/history', [HomeReservationController::class, 'history'])->name('history');
+        });
     });
 });
