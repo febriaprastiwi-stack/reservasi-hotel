@@ -18,6 +18,7 @@ class Reservation extends Model
         'guests',
         'status',
         'payment',
+        'status_pembayaran',
         'total_price',
     ];
 

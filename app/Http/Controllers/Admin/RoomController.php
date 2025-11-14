@@ -38,6 +38,7 @@ class RoomController extends Controller
             'jumlah_kasur'    => 'required|integer|min:1',
             'harga_per_malam' => 'required|numeric|min:0',
             'gambar_kasur'    => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'images.*'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048', // Tambahan
         ]);
 
         $data = $request->only([
@@ -48,14 +49,25 @@ class RoomController extends Controller
             'harga_per_malam',
         ]);
 
+        // Upload gambar utama
         if ($request->hasFile('gambar_kasur')) {
             $data['gambar_kasur'] = $request->file('gambar_kasur')->store('rooms', 'public');
+        }
+
+        // Upload multiple images (tambahan)
+        if ($request->hasFile('images')) {
+            $paths = [];
+            foreach ($request->file('images') as $image) {
+                $paths[] = $image->store('rooms', 'public');
+            }
+            $data['images'] = json_encode($paths);
         }
 
         Room::create($data);
 
         return redirect()->route('rooms.index')->with('success', 'Kamar berhasil ditambahkan.');
     }
+
 
     /**
      * Detail kamar.
@@ -85,6 +97,7 @@ class RoomController extends Controller
             'jumlah_kasur'    => 'required|integer|min:1',
             'harga_per_malam' => 'required|numeric|min:0',
             'gambar_kasur'    => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'images.*'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $data = $request->only([
@@ -95,6 +108,7 @@ class RoomController extends Controller
             'harga_per_malam',
         ]);
 
+        // Gambar utama
         if ($request->hasFile('gambar_kasur')) {
             if ($room->gambar_kasur) {
                 Storage::disk('public')->delete($room->gambar_kasur);
@@ -102,10 +116,22 @@ class RoomController extends Controller
             $data['gambar_kasur'] = $request->file('gambar_kasur')->store('rooms', 'public');
         }
 
+        // Tambah foto baru (multiple)
+        if ($request->hasFile('images')) {
+            $paths = json_decode($room->images ?? '[]', true);
+
+            foreach ($request->file('images') as $image) {
+                $paths[] = $image->store('rooms', 'public');
+            }
+
+            $data['images'] = json_encode($paths);
+        }
+
         $room->update($data);
 
         return redirect()->route('rooms.index')->with('success', 'Data kamar berhasil diperbarui.');
     }
+
 
     /**
      * Hapus kamar.

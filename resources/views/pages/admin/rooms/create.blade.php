@@ -25,8 +25,8 @@
                  style="background: linear-gradient(135deg, #d4af37, #f5e79e);">
                 Form Tambah Kamar
             </div>
-            <div class="card-body p-4">
 
+            <div class="card-body p-4">
                 <form action="{{ route('rooms.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
@@ -72,10 +72,19 @@
                         </div>
                     </div>
 
-                    <!-- Gambar -->
+                    <!-- Gambar Kasur -->
                     <div class="mb-3">
                         <label class="fw-bold">Gambar Kasur</label>
-                        <input type="file" name="gambar_kasur" class="form-control">
+                        <input type="file" name="gambar_kasur" id="gambar_kasur" class="form-control" accept="image/*">
+                        <div id="preview-gambar" class="mt-3"></div>
+                    </div>
+
+                    <!-- Foto Tambahan -->
+                    <div class="mb-3">
+                        <label for="images" class="form-label fw-bold">Foto Tambahan</label>
+                        <input type="file" name="images[]" id="images" class="form-control" accept="image/*" multiple>
+                        <small class="text-muted">Pilih beberapa gambar</small>
+                        <div id="preview-images" class="d-flex flex-wrap gap-2 mt-3"></div>
                     </div>
 
                     <!-- Tombol -->
@@ -90,10 +99,54 @@
                         </a>
                     </div>
                 </form>
-
             </div>
         </div>
 
     </div>
 </div>
+
+{{-- Script Preview Gambar --}}
+<script>
+    // Preview untuk gambar kasur
+    document.getElementById('gambar_kasur').addEventListener('change', function (event) {
+        const preview = document.getElementById('preview-gambar');
+        preview.innerHTML = '';
+        const file = event.target.files[0];
+        if (file) {
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.classList.add('img-fluid', 'rounded', 'shadow-sm');
+            img.style.maxWidth = '300px';
+            img.style.maxHeight = '200px';
+            preview.appendChild(img);
+        }
+    });
+
+    // Preview untuk banyak gambar tambahan
+    document.getElementById('images').addEventListener('change', function (event) {
+        const previewContainer = document.getElementById('preview-images');
+        previewContainer.innerHTML = '';
+        const files = event.target.files;
+        Array.from(files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = e => {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.classList.add('rounded', 'shadow-sm');
+                img.style.width = '120px';
+                img.style.height = '90px';
+                img.style.objectFit = 'cover';
+                previewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
+
+<style>
+    #preview-images img:hover {
+        transform: scale(1.05);
+        transition: 0.3s ease;
+    }
+</style>
 @endsection

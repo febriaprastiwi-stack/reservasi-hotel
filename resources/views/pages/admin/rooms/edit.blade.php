@@ -76,14 +76,38 @@
                         </div>
                     </div>
 
-                    <!-- Gambar -->
+                    <!-- Gambar Kasur -->
                     <div class="mb-3">
                         <label class="fw-bold">Gambar Kasur</label><br>
                         @if ($room->gambar_kasur)
                             <img src="{{ asset('storage/' . $room->gambar_kasur) }}" 
-                                 width="150" class="mb-2 rounded shadow-sm border">
+                                 width="200" class="mb-2 rounded shadow-sm border">
                         @endif
                         <input type="file" name="gambar_kasur" class="form-control">
+                    </div>
+
+                    <!-- Foto Tambahan -->
+                    <div class="mb-3">
+                        <label class="fw-bold">Foto Tambahan</label><br>
+
+                        @php
+                            $images = $room->images ? json_decode($room->images, true) : [];
+                        @endphp
+
+                        @if (!empty($images))
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                @foreach ($images as $img)
+                                    <img src="{{ asset('storage/' . $img) }}" 
+                                         width="120" height="120" 
+                                         class="rounded shadow-sm border" style="object-fit:cover;">
+                                @endforeach
+                            </div>
+                        @else
+                            <p class="text-muted fst-italic">Belum ada foto tambahan.</p>
+                        @endif
+
+                        <input type="file" name="images[]" class="form-control" multiple>
+                        <small class="text-muted">Pilih Beberapa Gambar</small>
                     </div>
 
                     <!-- Tombol -->

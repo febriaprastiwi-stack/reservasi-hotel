@@ -77,6 +77,16 @@
                                         <td>{{ ucfirst($reservation->payment) }}</td>
                                     </tr>
                                     <tr>
+                                        <th class="text-muted"><i class="bi bi-credit-card-2-front me-2"></i>Status Pembayaran :</th>
+                                        <td>
+                                            @if ($reservation->status_pembayaran === 'paid')
+                                                <span class="badge bg-success">Sudah Dibayar</span>
+                                            @else
+                                                <span class="badge bg-warning text-dark">Menunggu Pembayaran</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th class="text-muted"><i class="bi bi-cash-coin me-2"></i>Total Harga :</th>
                                         <td class="fw-bold text-success fs-5">
                                             Rp {{ number_format($reservation->total_price, 0, ',', '.') }}

@@ -48,17 +48,18 @@ class HomeReservationController extends Controller
 
         $totalPrice = $nights * $room->harga_per_malam;
 
-        // Simpan reservasi
+        // ✅ Simpan reservasi dan langsung dianggap "sudah dibayar"
         $reservation = Reservation::create([
-            'room_id'     => $room->id,
-            'name'        => $request->name,
-            'email'       => $request->email,
-            'check_in'    => $request->check_in,
-            'check_out'   => $request->check_out,
-            'guests'      => $request->guests,
-            'status'      => 'active', 
-            'payment'     => $request->payment,
-            'total_price' => $totalPrice,
+            'room_id'           => $room->id,
+            'name'              => $request->name,
+            'email'             => $request->email,
+            'check_in'          => $request->check_in,
+            'check_out'         => $request->check_out,
+            'guests'            => $request->guests,
+            'status'            => 'active',
+            'payment'           => $request->payment,
+            'status_pembayaran' => 'paid', // ✅ otomatis paid
+            'total_price'       => $totalPrice,
         ]);
 
         // Update status kamar jadi "reserved"

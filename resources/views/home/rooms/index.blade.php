@@ -65,20 +65,55 @@
                             <div class="card shadow-sm h-100 room-card border-0 overflow-hidden fade-in">
                                 {{-- Gambar kamar --}}
                                 <div class="position-relative">
+                                
+
+                                    <div id="carouselRoom{{ $room->id }}" class="carousel slide" data-bs-ride="carousel">
+                                    <!-- Indicator titik -->
+                                    <div class="carousel-indicators">
+                                        @php
+                                            $images = [];
+                                            if ($room->gambar_kasur) $images[] = $room->gambar_kasur;
+                                            if ($room->images) $images = array_merge($images, json_decode($room->images, true));
+                                        @endphp
+
+                                        @foreach ($images as $index => $img)
+                                            <button type="button" 
+                                                    data-bs-target="#carouselRoom{{ $room->id }}" 
+                                                    data-bs-slide-to="{{ $index }}" 
+                                                    class="{{ $index == 0 ? 'active' : '' }}" 
+                                                    aria-label="Slide {{ $index + 1 }}"></button>
+                                        @endforeach
+                                    </div>
+
+                                    <div class="carousel-inner">
+                                        {{-- Gambar utama --}}
+                                        @foreach ($images as $index => $img)
+                                            <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                                <img src="{{ asset('storage/' . $img) }}" 
+                                                    class="d-block w-100 room-image" 
+                                                    alt="Room Image">
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    <!-- Tombol navigasi -->
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselRoom{{ $room->id }}" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselRoom{{ $room->id }}" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                </div>
+
+
+                                {{-- 🔴 Badge RESERVED tetap di atas gambar --}}
                                     @if ($room->status === 'reserved')
-                                        <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-3 py-2 shadow">
+                                        <span class="badge bg-danger position-absolute top-0 end-0 m-2 px-3 py-2 shadow"
+                                            style="z-index: 10;">
                                             RESERVED
                                         </span>
-                                    @endif
-
-                                    @if ($room->gambar_kasur)
-                                        <img src="{{ asset('storage/' . $room->gambar_kasur) }}" 
-                                             class="card-img-top room-image" 
-                                             alt="{{ $room->jenis_kamar }}">
-                                    @else
-                                        <img src="{{ asset('images/no-image.png') }}" 
-                                             class="card-img-top room-image" 
-                                             alt="No Image">
                                     @endif
 
                                     {{-- Harga box di bawah gambar --}}
@@ -274,6 +309,25 @@
         opacity: 1;
         transform: translateY(0) scale(1);
     }
+
+    /* Indicator titik kecil */
+    .carousel-indicators {
+        bottom: 7px;
+    }
+    .carousel-indicators [data-bs-target] {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: rgba(255,255,255,0.7);
+        border: none;
+        margin: 0 4px;
+        transition: all 0.3s ease;
+    }
+    .carousel-indicators .active {
+        background-color: #faedda; /* warna gold lembut */
+        transform: scale(1.2);
+    }
+
 </style>
 
 {{-- Script animasi scroll --}}

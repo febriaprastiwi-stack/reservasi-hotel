@@ -30,7 +30,6 @@
                     <form action="{{ route('home.reservations.store') }}" method="POST">
                         @csrf
 
-
                         {{-- Full Name --}}
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Full Name</label>
@@ -54,6 +53,7 @@
                                 <input type="date" name="check_in" 
                                        class="form-control rounded-3" required>
                             </div>
+
                             {{-- Check-out --}}
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-semibold">Check-out</label>
@@ -89,7 +89,7 @@
                             </select>
                         </div>
 
-                        {{-- Hidden data --}}
+                        {{-- Hidden Data --}}
                         <input type="hidden" name="room_id" value="{{ $room->id }}">
                         <input type="hidden" id="price_per_night" value="{{ $room->harga_per_malam }}">
                         <input type="hidden" name="total_price" id="total_price">
@@ -111,20 +111,32 @@
     const checkOutInput = document.querySelector('input[name="check_out"]');
     const pricePerNight = parseInt("{{ $room->harga_per_malam }}");
 
+    // 🔒 Set tanggal minimal hari ini untuk check-in
+    const today = new Date().toISOString().split('T')[0];
+    checkInInput.setAttribute('min', today);
+
+    checkInInput.addEventListener('change', () => {
+        const checkInDate = new Date(checkInInput.value);
+        // 🔒 Check-out minimal harus setelah check-in
+        const minCheckout = new Date(checkInDate);
+        minCheckout.setDate(minCheckout.getDate() + 1);
+        checkOutInput.min = minCheckout.toISOString().split('T')[0];
+        // Reset jika check-out sebelumnya lebih kecil
+        if (checkOutInput.value < checkOutInput.min) {
+            checkOutInput.value = '';
+        }
+        hitungTotal();
+    });
+
+    checkOutInput.addEventListener('change', hitungTotal);
+
     function hitungTotal() {
         let checkIn = new Date(checkInInput.value);
         let checkOut = new Date(checkOutInput.value);
 
-        if (checkIn && checkOut) {
-            // Hitung selisih hari
+        if (checkIn && checkOut && checkOut > checkIn) {
             let diffTime = checkOut - checkIn;
             let nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-            // Minimal 1 malam, meskipun tanggal sama
-            if (nights <= 0) {
-                nights = 1;
-            }
-
             let total = nights * pricePerNight;
 
             let formatted = new Intl.NumberFormat('id-ID', {
@@ -139,9 +151,6 @@
             document.getElementById('total_price').value = 0;
         }
     }
-
-    checkInInput.addEventListener('change', hitungTotal);
-    checkOutInput.addEventListener('change', hitungTotal);
 </script>
 @endpush
 @endsection

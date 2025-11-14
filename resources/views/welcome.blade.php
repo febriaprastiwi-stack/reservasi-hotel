@@ -183,10 +183,8 @@
     <!-- Slideshow Background -->
     <div class="slideshow" id="slideshow">
       <div class="slide active" style="background-image: url('{{ asset('img/hotel-bg.jpg') }}');"></div>
-      <div class="slide" style="background-image: url('{{ asset('img/foto.jpg') }}');"></div>
-      <div class="slide" style="background-image: url('{{ asset('img/foto2.jpg') }}');"></div>
-      <div class="slide" style="background-image: url('{{ asset('img/foto5.jpg') }}');"></div>
-
+      <div class="slide" style="background-image: url('{{ asset('img/foto6.jpg') }}');"></div>
+      <div class="slide" style="background-image: url('{{ asset('img/room.jpg') }}');"></div>
     </div>
 
     <!-- Konten -->

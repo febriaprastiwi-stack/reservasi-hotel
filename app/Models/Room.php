@@ -17,6 +17,7 @@ class Room extends Model
         'fasilitas_kamar',
         'jumlah_kasur',
         'gambar_kasur',
+        'images',
         'harga_per_malam',
         'status',
     ];

@@ -44,9 +44,46 @@
                            value="{{ $room->id }}" 
                            style="top:15px; right:15px; transform:scale(1.3); display:none; z-index:10;">
 
-                    <!-- Gambar -->
+                    <!-- Gambar / Carousel -->
                     <div class="position-relative">
-                        @if ($room->gambar_kasur)
+                        @php
+                            $images = $room->images ? json_decode($room->images, true) : [];
+                            if ($room->gambar_kasur) {
+                                array_unshift($images, $room->gambar_kasur);
+                            }
+                        @endphp
+
+                        @if (!empty($images))
+                            <div id="carouselRoom{{ $room->id }}" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    @foreach ($images as $index => $img)
+                                        <button type="button" data-bs-target="#carouselRoom{{ $room->id }}" 
+                                                data-bs-slide-to="{{ $index }}" 
+                                                class="{{ $index == 0 ? 'active' : '' }}" 
+                                                aria-label="Slide {{ $index + 1 }}"></button>
+                                    @endforeach
+                                </div>
+
+                                <div class="carousel-inner" style="height:220px;">
+                                    @foreach ($images as $index => $img)
+                                        <div class="carousel-item {{ $index == 0 ? 'active' : '' }}">
+                                            <img src="{{ asset('storage/' . $img) }}" 
+                                                class="d-block w-100" 
+                                                style="height:220px; object-fit:cover;">
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselRoom{{ $room->id }}" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselRoom{{ $room->id }}" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon bg-dark rounded-circle" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        @elseif ($room->gambar_kasur)
                             <img src="{{ asset('storage/' . $room->gambar_kasur) }}" 
                                  class="card-img-top" 
                                  style="height:220px; object-fit:cover;">
@@ -56,6 +93,7 @@
                                 No Image
                             </div>
                         @endif
+
                         <div class="harga-box position-absolute bottom-0 start-0 m-3 px-3 py-2 shadow">
                             <span class="fw-bold">Rp {{ number_format($room->harga_per_malam, 0, ',', '.') }}</span><br>
                             <small class="text-white-50">/ malam</small>
@@ -81,17 +119,17 @@
                         <!-- Tombol -->
                         <div class="mt-auto d-flex justify-content-between gap-2">
                             <a href="{{ route('rooms.show', $room->id) }}" 
-                               class="btn btn-outline-dark btn-sm rounded-pill px-3 detail-btn">
+                               class="btn btn-detail btn-sm rounded-pill px-3 fw-semibold">
                                 <i class="bi bi-eye"></i> Detail
                             </a>
                             <a href="{{ route('rooms.edit', $room->id) }}" 
-                               class="btn btn-sm rounded-pill px-3 text-white edit-btn">
+                               class="btn btn-edit btn-sm rounded-pill px-3 fw-semibold">
                                 <i class="bi bi-pencil-square"></i> Edit
                             </a>
                             <form action="{{ route('rooms.destroy', $room->id) }}" method="POST" class="delete-form m-0">
                                 @csrf
                                 @method('DELETE')
-                                <button type="button" class="btn btn-sm rounded-pill px-3 text-white hapus-btn delete-btn">
+                                <button type="button" class="btn btn-delete btn-sm rounded-pill px-3 fw-semibold delete-btn">
                                     <i class="bi bi-trash"></i> Hapus
                                 </button>
                             </form>
@@ -116,128 +154,70 @@
     </div>
 </div>
 
-@push('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const selectModeBtn = document.getElementById('selectModeBtn');
-    const deleteSelectedBtn = document.getElementById('deleteSelectedBtn');
-    const checkboxes = document.querySelectorAll('.room-checkbox');
-    const selectedRoomsInput = document.getElementById('selectedRooms');
-    const spinner = document.getElementById('loadingSpinner');
-    let selectionMode = false;
-
-    // Mode Seleksi
-    selectModeBtn.addEventListener('click', () => {
-        selectionMode = !selectionMode;
-        checkboxes.forEach(cb => cb.style.display = selectionMode ? 'block' : 'none');
-        deleteSelectedBtn.style.display = selectionMode ? 'inline-block' : 'none';
-        selectModeBtn.innerHTML = selectionMode 
-            ? '<i class="bi bi-x-circle"></i> Batal Seleksi' 
-            : '<i class="bi bi-check2-square"></i> Mode Seleksi';
-    });
-
-    // Tampilkan spinner
-    function showSpinner() {
-        spinner.style.display = 'flex';
-    }
-
-    // Sembunyikan spinner
-    function hideSpinner() {
-        spinner.style.display = 'none';
-    }
-
-    // Delete terpilih
-    deleteSelectedBtn.addEventListener('click', () => {
-        const selectedIds = Array.from(checkboxes)
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-
-        if (selectedIds.length === 0) {
-            Swal.fire('Tidak ada kamar yang dipilih', '', 'info');
-            return;
-        }
-
-        Swal.fire({
-            title: 'Hapus Kamar Terpilih?',
-            text: 'Semua kamar yang dipilih akan dihapus permanen!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d4af37',
-            cancelButtonColor: '#444',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
-        }).then(result => {
-            if (result.isConfirmed) {
-                showSpinner();
-                selectedRoomsInput.value = selectedIds.join(',');
-                document.getElementById('bulkDeleteForm').submit();
-            }
-        });
-    });
-
-    // Tombol hapus 1 per 1
-    document.querySelectorAll('.delete-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const form = this.closest('.delete-form');
-            Swal.fire({
-                title: 'Hapus Kamar?',
-                text: 'Kamar yang dihapus tidak dapat dikembalikan!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d4af37',
-                cancelButtonColor: '#444',
-                confirmButtonText: 'Ya, Hapus!',
-                cancelButtonText: 'Batal'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    showSpinner();
-                    form.submit();
-                }
-            });
-        });
-    });
-
-    // ✅ Notifikasi SweetAlert sukses otomatis setelah redirect
-    @if (session('success'))
-    Swal.fire({
-        icon: 'success',
-        title: 'Berhasil!',
-        text: '{{ session('success') }}',
-        showConfirmButton: false,
-        timer: 2000,
-        background: '#fff8dc',
-        color: '#444',
-        iconColor: '#d4af37'
-    });
-    @endif
-});
-</script>
-@endpush
-
 <!-- Custom Style -->
 <style>
-    .room-card { background:#fff; border:1px solid rgba(212,175,55,0.2); transition:0.3s; }
-    .room-card:hover { transform:translateY(-5px); box-shadow:0 8px 20px rgba(212,175,55,0.3); }
-    .tambah-btn { background:linear-gradient(135deg,#d4af37,#b8860b); border:none; }
-    .tambah-btn:hover { background:linear-gradient(135deg,#e6c84f,#d4af37); transform:translateY(-2px); }
-    .harga-box { background:rgba(0,0,0,0.6); color:#fff; border-radius:10px; }
-    .fasilitas-badge { background:#f8f1d4; color:#b8860b; border:1px solid #e6c84f; margin:2px; }
-    .detail-btn { border-color:#d4af37; color:#b8860b; }
-    .detail-btn:hover { background:#d4af37; color:#fff; }
-    .edit-btn { background:linear-gradient(135deg,#d4af37,#b8860b); border:none; }
-    .edit-btn:hover { background:linear-gradient(135deg,#e6c84f,#d4af37); }
-    .hapus-btn { background:#444; border:none; }
-    .hapus-btn:hover { background:#c0392b; }
+.room-card { background:#fff; border:1px solid rgba(212,175,55,0.2); transition:0.3s; }
+.room-card:hover { transform:translateY(-5px); box-shadow:0 8px 20px rgba(212,175,55,0.3); }
+.tambah-btn { background:linear-gradient(135deg,#d4af37,#b8860b); border:none; }
+.tambah-btn:hover { background:linear-gradient(135deg,#e6c84f,#d4af37); transform:translateY(-2px); }
+.harga-box { background:rgba(0,0,0,0.6); color:#fff; border-radius:10px; }
+.fasilitas-badge { background:#f8f1d4; color:#b8860b; border:1px solid #e6c84f; margin:2px; }
 
-    /* 🔄 Spinner Loading */
-    #loadingSpinner {
-        position: fixed;
-        top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(255,255,255,0.8);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    }
+/* 🎨 Tombol Aksi Baru */
+.btn-detail {
+    background:#fff;
+    border:1.5px solid #d4af37;
+    color:#b8860b;
+    box-shadow:0 2px 5px rgba(212,175,55,0.2);
+    transition:all .25s ease;
+}
+.btn-detail:hover {
+    background:#d4af37;
+    color:#fff;
+    transform:translateY(-2px);
+}
+
+.btn-edit {
+    background:linear-gradient(135deg,#d4af37,#b8860b);
+    color:#fff;
+    border:none;
+    box-shadow:0 3px 8px rgba(212,175,55,0.3);
+    transition:all .25s ease;
+}
+.btn-edit:hover {
+    background:linear-gradient(135deg,#e6c84f,#d4af37);
+    transform:translateY(-2px) scale(1.03);
+}
+
+.btn-delete {
+    background:#2c2c2c;
+    color:#fff;
+    border:none;
+    box-shadow:0 3px 8px rgba(0,0,0,0.3);
+    transition:all .25s ease;
+}
+.btn-delete:hover {
+    background:#c0392b;
+    box-shadow:0 4px 10px rgba(192,57,43,0.4);
+    transform:translateY(-2px) scale(1.03);
+}
+
+/* 🔘 Indikator jadi titik */
+.carousel-indicators { bottom: 5px; }
+.carousel-indicators [data-bs-target] {
+    width: 7px; height: 7px; border-radius:50%;
+    background-color:#fdfdfb; opacity:0.5; transition:all 0.3s ease;
+}
+.carousel-indicators .active {
+    opacity:1; background-color:#f1eddd;
+}
+
+/* 🔄 Spinner Loading */
+#loadingSpinner {
+    position:fixed; top:0; left:0; right:0; bottom:0;
+    background:rgba(255,255,255,0.8);
+    display:none; justify-content:center; align-items:center;
+    z-index:9999;
+}
 </style>
 @endsection

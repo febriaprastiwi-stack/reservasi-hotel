@@ -18,6 +18,7 @@ return new class extends Migration
             $table->text('fasilitas_kamar')->nullable();
             $table->unsignedInteger('jumlah_kasur')->default(1);
             $table->string('gambar_kasur')->nullable();
+            $table->json('images')->nullable();
             $table->decimal('harga_per_malam', 12, 2)->default(0);
             $table->string('status')->default('available');
             $table->timestamps();

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->integer('guests');
             $table->enum('status', ['active', 'canceled', 'completed'])->default('active');
             $table->string('payment')->nullable(); 
+            $table->enum('status_pembayaran', ['pending', 'paid'])->default('pending');
             $table->decimal('total_price', 12, 2)->default(0);
             $table->timestamps();
         });

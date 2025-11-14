@@ -70,7 +70,7 @@ class ReservationController extends Controller
     }
 
     // Hapus reservasi
-    public function destroy(Reservation $reservation)
+    public function destroy($id)
     {
         $reservation->delete();
 
@@ -78,19 +78,14 @@ class ReservationController extends Controller
                          ->with('success', 'Reservation deleted successfully.');
     }
 
-   public function bulkDelete(Request $request)
+    public function bulkDelete(Request $request)
     {
-        $ids = $request->input('ids', []);
-
-        if (empty($ids)) {
-            return redirect()->route('reservations.index')
-                ->with('error', 'Tidak ada reservasi yang dipilih.');
+        $ids = $request->input('selected', []);
+        if (count($ids) > 0) {
+            Reservation::whereIn('id', $ids)->delete();
+            return redirect()->route('reservations.index')->with('success', 'Reservasi terpilih berhasil dihapus.');
         }
-
-        Reservation::whereIn('id', $ids)->delete();
-
-        return redirect()->route('reservations.index')
-            ->with('success', count($ids) . ' reservasi berhasil dihapus.');
+        return redirect()->route('reservations.index')->with('error', 'Tidak ada reservasi yang dipilih.');
     }
 
 
